@@ -15,10 +15,6 @@ class Player
 
     static void Main(string[] args)
     {
-        enum Directions
-        {
-            UP, DOWN, RIGHT, LEFT
-        }
         IDictionary<(int,int), bool> map = new Dictionary<(int,int), bool>();
 
         // Fill the IDictionary with false values (false == no wall, true == wall)
@@ -26,7 +22,7 @@ class Player
         // 0 and 31 and 0 and 21 being the border walls
         for(int x = 0; x < 31; x++) {
             for(int y = 0; y < 21; y++) {
-                if((x == 0) || (x == 31) || (y == 0) || (y == 21)){
+                if((x == 0) || (x == 31) || (y == 0) || (y == 21)) {
                     map.Add((x,y),true);
                 }
                 else map.Add((x,y),false);
@@ -34,8 +30,9 @@ class Player
         }
 
         string[] inputs;
-        string direction = Directions.DOWN;
-        string oldTurnDirection = "undefined";
+
+        string direction = "DOWN";
+        bool obstacle = false;
 
         
         // game loop
@@ -69,29 +66,44 @@ class Player
                 // When the player plays
                 else if(i == P){
                     map[(X1s,Y1s)] = true;
-                    // Check down or up
-                    if((map[(X1s, Y1s-1)] == true) || (map[(X1s, Y1s+1)] == true)) {
-                        // Turn left
-                        if (map[(X1s-1, Y1s)] == false  && oldTurnDirection != "RIGHT") {
-                            direction = "LEFT";
-                        }
-                        // Turn right
-                        else if (map[(X1s+1, Y1s)] == false  && oldTurnDirection != "LEFT") {
-                            direction = "RIGHT";
-                        }   
-                    }  
 
-                    // Check right or left
-                    else if((map[(X1s-1, Y1s)] == true) || (map[(X1s+1, Y1s)] == true)) {
-                        // Turn down
-                        if (map[(X1s, Y1s-1)] == false  && oldTurnDirection != "UP") {
-                            direction = "DOWN";
+                    // Check if next movement will lead to an obstacle
+                    if(direction == "DOWN") {
+                        if(map[(X1s,Y1-1)]) {
+                            obstacle = true;
                         }
-                        // Turn up
-                        else if (map[(X1s, Y1s+1)] == false  && oldTurnDirection != "DOWN") {
-                            direction = "UP";
-                        }   
-                    }             
+                    }
+                    else if(direction == "UP") {
+                        if(map[(X1s,Y1+1)]) {
+                            obstacle = true;
+                        }
+                    }  
+                    else if(direction == "RIGHT") {
+                        if(map[(X1s+1,Y1)]) {
+                            obstacle = true;
+                        }
+                    }  
+                    else if(direction == "LEFT") {
+                        if(map[(X1s-1,Y1)]) {
+                            obstacle = true;
+                        }
+                    }
+
+                    if(obstacle) {
+                        // if UP or DOWN
+                        if((direction == "DOWN") || (direction == "UP")) {
+                            if(!map[(X1s+1,Y1)]) { direction = "RIGHT"; }
+                            else {direction = "LEFT";}
+                            obstacle = false;
+                        }
+
+                        // if LEFT or RIGHT
+                        else {
+                            if(!map[(X1s,Y1+1)]) { direction = "DOWN"; }
+                            else {direction = "UP";}
+                            obstacle = false;
+                        }
+                    }           
 
                 }
             }
@@ -99,7 +111,6 @@ class Player
             // Write an action using Console.WriteLine()
             // To debug: Console.Error.WriteLine("Debug messages...");
 
-            oldTurnDirection = direction;
             Console.WriteLine(direction); // A single line with UP, DOWN, LEFT or RIGHT
 
         }
