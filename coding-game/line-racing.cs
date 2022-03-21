@@ -20,14 +20,23 @@ class Player
         // Fill the IDictionary with false values (false == no wall, true == wall)
         // Goes from 0 to 31 for x and 0 to 21 to Y
         // 0 and 31 and 0 and 21 being the border walls
-        for(int x = 0; x < 31; x++) {
-            for(int y = 0; y < 21; y++) {
+        for(int x = 0; x <= 31; x++) {
+            for(int y = 0; y <= 21; y++) {
                 if((x == 0) || (x == 31) || (y == 0) || (y == 21)) {
                     map.Add((x,y),true);
                 }
                 else map.Add((x,y),false);
             }
         }
+
+        /*foreach (var key in map.Keys)
+        {
+            Console.Error.WriteLine("{0}: {1}", key, String.Join(", ", map[key]));
+        }*/
+
+        //Console.Error.WriteLine("31,0 : " + map[(31,0)]);
+        //Console.Error.WriteLine("31,1 : " + map[(31,1)]);
+
 
         string[] inputs;
 
@@ -55,8 +64,8 @@ class Player
 
                 // Parsed round coordiantes are in values from 0 to 29 but we add 2 to simulate 
                 // invisible walls so we increment by 1 ( 0 would became 1)
-                int X1s = X1++;
-                int Y1s = Y1++;
+                int X1s = X1+2;
+                int Y1s = Y1+2;
 
                 // When an opposant plays
                 if(i != P) {
@@ -88,8 +97,12 @@ class Player
                             obstacle = true;
                         }
                     }
+                    Console.Error.WriteLine("Obstacle : " + obstacle);
+                    Console.Error.WriteLine("Direction : " + direction);
+                    Console.Error.WriteLine("Coord : " + X1s + "," + Y1s);
 
                     if(obstacle) {
+                        Console.Error.WriteLine("Obstacle");
                         // if UP or DOWN
                         if((direction == "DOWN") || (direction == "UP")) {
                             if(!map[(X1s+1,Y1)]) { direction = "RIGHT"; }
