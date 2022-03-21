@@ -15,7 +15,10 @@ class Player
 
     static void Main(string[] args)
     {
-        
+        enum Directions
+        {
+            UP, DOWN, RIGHT, LEFT
+        }
         IDictionary<(int,int), bool> map = new Dictionary<(int,int), bool>();
 
         // Fill the IDictionary with false values (false == no wall, true == wall)
@@ -31,7 +34,7 @@ class Player
         }
 
         string[] inputs;
-        string direction = "DOWN";
+        string direction = Directions.DOWN;
         string oldTurnDirection = "undefined";
 
         
@@ -52,8 +55,11 @@ class Player
 
                 //int X0s = X0++;
                 //int Y0s = Y0++;
-                int X1s = X1--;
-                int Y1s = Y1--;
+
+                // Parsed round coordiantes are in values from 0 to 29 but we add 2 to simulate 
+                // invisible walls so we increment by 1 ( 0 would became 1)
+                int X1s = X1++;
+                int Y1s = Y1++;
 
                 // When an opposant plays
                 if(i != P) {
